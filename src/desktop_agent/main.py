@@ -6,6 +6,9 @@ Run with: python -m desktop_agent.main
 """
 
 import sys
+from PyQt6.QtWidgets import QApplication
+
+from desktop_agent.window import MainWindow
 
 
 def main():
@@ -13,11 +16,20 @@ def main():
     print("Desktop Agent v0.1.0")
     print("Starting application...")
 
-    # PyQt6 application will be initialized here in Phase 2
-    print("Phase 1 complete - project structure is set up!")
-    print("Next: Phase 2 will add PyQt6 window creation.")
+    # Create the Qt application
+    # QApplication manages the GUI application's control flow and main settings
+    app = QApplication(sys.argv)
 
-    return 0
+    # Create and show the main window
+    window = MainWindow()
+    window.show()
+
+    print("Window created. Close the window to exit.")
+
+    # Start the event loop
+    # exec() starts the main event loop and waits until exit() is called
+    # sys.exit() ensures proper cleanup when the application closes
+    return app.exec()
 
 
 if __name__ == "__main__":

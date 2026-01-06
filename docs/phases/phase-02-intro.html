@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 2: PyQt Fundamentals - Introduction | Desktop Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e4e4e4;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .breadcrumb {
+            margin-bottom: 30px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #00d9ff;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        header {
+            margin-bottom: 40px;
+        }
+
+        .phase-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #888;
+        }
+
+        .objectives-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .objective-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #00d9ff;
+        }
+
+        .objective-card.learning {
+            border-left-color: #00ff88;
+        }
+
+        .objective-card h3 {
+            font-size: 0.9rem;
+            color: #00d9ff;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .objective-card.learning h3 {
+            color: #00ff88;
+        }
+
+        .objective-card p {
+            color: #bbb;
+            font-size: 0.95rem;
+        }
+
+        .content-section {
+            background: rgba(255,255,255,0.03);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            color: #00d9ff;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            color: #00ff88;
+            margin: 25px 0 15px 0;
+            font-weight: 400;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #bbb;
+        }
+
+        code {
+            background: rgba(0, 217, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #00d9ff;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #0a0a15;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e4e4e4;
+            display: block;
+            line-height: 1.6;
+        }
+
+        .keyword {
+            color: #c586c0;
+        }
+
+        .function {
+            color: #dcdcaa;
+        }
+
+        .class-name {
+            color: #4ec9b0;
+        }
+
+        .string {
+            color: #ce9178;
+        }
+
+        .comment {
+            color: #6a9955;
+        }
+
+        .number {
+            color: #b5cea8;
+        }
+
+        ul, ol {
+            margin: 15px 0 15px 25px;
+            color: #bbb;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .info-box {
+            background: rgba(0, 217, 255, 0.1);
+            border-left: 4px solid #00d9ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .info-box.tip {
+            background: rgba(0, 255, 136, 0.1);
+            border-left-color: #00ff88;
+        }
+
+        .info-box.warning {
+            background: rgba(255, 193, 7, 0.1);
+            border-left-color: #ffc107;
+        }
+
+        .info-box strong {
+            color: #fff;
+        }
+
+        .diagram {
+            background: #0a0a15;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            text-align: center;
+        }
+
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        .flow-box {
+            background: rgba(0, 217, 255, 0.2);
+            border: 1px solid #00d9ff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: #00d9ff;
+            font-weight: 500;
+        }
+
+        .flow-arrow {
+            color: #00ff88;
+            font-size: 1.5rem;
+        }
+
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .concept-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .concept-card h4 {
+            color: #00d9ff;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .concept-card p {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .comparison-table th {
+            background: rgba(0, 217, 255, 0.1);
+            color: #00d9ff;
+            font-weight: 500;
+        }
+
+        .comparison-table td {
+            color: #bbb;
+        }
+
+        .task-list {
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .task-list h4 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .task {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .task:last-child {
+            border-bottom: none;
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00d9ff;
+            border-radius: 4px;
+            margin-right: 15px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .task-content {
+            color: #bbb;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 8px;
+            color: #00d9ff;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(0, 217, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.next {
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            color: #000;
+            border: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../project-overview.html">Desktop Agent</a> / Phase 2
+        </div>
+
+        <header>
+            <span class="phase-badge">Phase 2 of 10</span>
+            <h1>PyQt Fundamentals</h1>
+            <p class="subtitle">Creating your first graphical user interface</p>
+        </header>
+
+        <div class="objectives-box">
+            <div class="objective-card">
+                <h3>App Objective</h3>
+                <p>Create a basic PyQt6 window that can be launched and closed, establishing the foundation for our overlay application.</p>
+            </div>
+            <div class="objective-card learning">
+                <h3>Learning Objective</h3>
+                <p>Understand the PyQt6 framework basics: QApplication, QWidget, the event loop, and the signal/slot mechanism.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>What is PyQt6?</h2>
+            <p>
+                PyQt6 is a set of Python bindings for the Qt framework, one of the most powerful and widely-used
+                GUI toolkits in the world. Qt is written in C++ and powers applications like VLC, VirtualBox,
+                and even parts of the KDE desktop environment.
+            </p>
+            <p>
+                PyQt6 lets us use all of Qt's power with Python's simplicity. We can create windows, buttons,
+                text inputs, and complex custom widgets - everything we need for Desktop Agent.
+            </p>
+
+            <h3>Why PyQt6?</h3>
+            <div class="concept-grid">
+                <div class="concept-card">
+                    <h4>Cross-Platform</h4>
+                    <p>Write once, run on Windows, macOS, and Linux without changes.</p>
+                </div>
+                <div class="concept-card">
+                    <h4>Feature-Rich</h4>
+                    <p>Supports transparency, custom painting, system tray, and more.</p>
+                </div>
+                <div class="concept-card">
+                    <h4>Professional</h4>
+                    <p>Used in commercial applications worldwide.</p>
+                </div>
+                <div class="concept-card">
+                    <h4>Well-Documented</h4>
+                    <p>Extensive documentation and large community.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>The Core Components</h2>
+
+            <h3>QApplication - The Application Manager</h3>
+            <p>
+                Every PyQt application needs exactly one <code>QApplication</code> instance. It manages:
+            </p>
+            <ul>
+                <li>Application-wide settings and resources</li>
+                <li>The event loop (processing user input, repaints, etc.)</li>
+                <li>Command-line argument handling</li>
+                <li>Application lifecycle (startup and shutdown)</li>
+            </ul>
+
+            <pre><code><span class="keyword">from</span> PyQt6.QtWidgets <span class="keyword">import</span> <span class="class-name">QApplication</span>
+<span class="keyword">import</span> sys
+
+<span class="comment"># Create the application - must happen before any widgets</span>
+app = <span class="class-name">QApplication</span>(sys.argv)
+
+<span class="comment"># ... create windows and widgets here ...</span>
+
+<span class="comment"># Start the event loop - this blocks until the app exits</span>
+sys.exit(app.<span class="function">exec</span>())</code></pre>
+
+            <div class="info-box">
+                <strong>Key Point:</strong> <code>app.exec()</code> starts the event loop and doesn't return
+                until the application quits. Everything after it only runs when the app closes.
+            </div>
+
+            <h3>QWidget - The Building Block</h3>
+            <p>
+                <code>QWidget</code> is the base class for all UI elements in Qt. A widget can be:
+            </p>
+            <ul>
+                <li>A window (if it has no parent)</li>
+                <li>A child widget inside another widget (buttons, labels, etc.)</li>
+                <li>A custom component you design yourself</li>
+            </ul>
+
+            <pre><code><span class="keyword">from</span> PyQt6.QtWidgets <span class="keyword">import</span> <span class="class-name">QWidget</span>
+
+<span class="keyword">class</span> <span class="class-name">MainWindow</span>(<span class="class-name">QWidget</span>):
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        <span class="function">super</span>().<span class="function">__init__</span>()  <span class="comment"># Initialize the parent class</span>
+
+        <span class="comment"># Set window properties</span>
+        self.<span class="function">setWindowTitle</span>(<span class="string">"Desktop Agent"</span>)
+        self.<span class="function">setGeometry</span>(<span class="number">100</span>, <span class="number">100</span>, <span class="number">800</span>, <span class="number">600</span>)  <span class="comment"># x, y, width, height</span></code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>The Event Loop</h2>
+            <p>
+                GUI applications work differently from simple scripts. Instead of running top-to-bottom and exiting,
+                they wait for events (mouse clicks, key presses, window resizes) and respond to them.
+            </p>
+
+            <div class="diagram">
+                <div class="flow-diagram">
+                    <div class="flow-box">User Action<br>(click, type, etc.)</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-box">Event Created</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-box">Event Loop<br>Processes</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-box">Handler Called</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-box">UI Updates</div>
+                </div>
+            </div>
+
+            <p>
+                The event loop runs continuously, checking for events and dispatching them to the appropriate
+                widgets. When you call <code>app.exec()</code>, you're starting this loop.
+            </p>
+
+            <div class="info-box tip">
+                <strong>Think of it like:</strong> A receptionist who continuously checks for incoming calls
+                and routes them to the right person. The receptionist never stops working until the office closes.
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Signals and Slots</h2>
+            <p>
+                Qt uses a pattern called "signals and slots" for communication between objects. It's one of
+                Qt's most powerful features and essential for building interactive applications.
+            </p>
+
+            <ul>
+                <li><strong>Signal:</strong> An announcement that something happened (e.g., "button was clicked")</li>
+                <li><strong>Slot:</strong> A function that responds to a signal (e.g., "take a screenshot")</li>
+            </ul>
+
+            <pre><code><span class="comment"># Connecting a signal to a slot</span>
+button.clicked.<span class="function">connect</span>(self.take_screenshot)
+
+<span class="comment"># When button is clicked, take_screenshot() is automatically called</span>
+<span class="keyword">def</span> <span class="function">take_screenshot</span>(self):
+    <span class="function">print</span>(<span class="string">"Screenshot captured!"</span>)</code></pre>
+
+            <h3>Why Signals and Slots?</h3>
+            <table class="comparison-table">
+                <tr>
+                    <th>Traditional Callbacks</th>
+                    <th>Signals and Slots</th>
+                </tr>
+                <tr>
+                    <td>Tight coupling between objects</td>
+                    <td>Loose coupling - objects don't need to know about each other</td>
+                </tr>
+                <tr>
+                    <td>One-to-one connections</td>
+                    <td>One signal can connect to many slots</td>
+                </tr>
+                <tr>
+                    <td>Manual cleanup needed</td>
+                    <td>Automatic cleanup when objects are deleted</td>
+                </tr>
+            </table>
+
+            <div class="info-box">
+                <strong>We'll use this later:</strong> In Phase 5, we'll connect our Capture button's
+                <code>clicked</code> signal to a screenshot function. For now, just understand the concept.
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Window Geometry</h2>
+            <p>
+                Every widget has a position and size, collectively called its "geometry". For top-level
+                windows, this is relative to the screen.
+            </p>
+
+            <pre><code><span class="comment"># Method 1: setGeometry(x, y, width, height)</span>
+window.<span class="function">setGeometry</span>(<span class="number">100</span>, <span class="number">100</span>, <span class="number">800</span>, <span class="number">600</span>)
+
+<span class="comment"># Method 2: Separate calls</span>
+window.<span class="function">move</span>(<span class="number">100</span>, <span class="number">100</span>)      <span class="comment"># Position</span>
+window.<span class="function">resize</span>(<span class="number">800</span>, <span class="number">600</span>)    <span class="comment"># Size</span>
+
+<span class="comment"># Method 3: Fixed size (can't be resized by user)</span>
+window.<span class="function">setFixedSize</span>(<span class="number">800</span>, <span class="number">600</span>)</code></pre>
+
+            <div class="diagram">
+<pre style="text-align: left; color: #888;">
+Screen (0,0)
+    ┌──────────────────────────────────────────┐
+    │                                          │
+    │   (100,100)                              │
+    │      ┌─────────────────────┐             │
+    │      │                     │             │
+    │      │    Your Window      │ height=600  │
+    │      │                     │             │
+    │      └─────────────────────┘             │
+    │           width=800                      │
+    │                                          │
+    └──────────────────────────────────────────┘
+</pre>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Showing and Closing Windows</h2>
+
+            <h3>Showing a Window</h3>
+            <p>
+                Creating a widget doesn't automatically display it. You must call <code>show()</code>:
+            </p>
+            <pre><code>window = <span class="class-name">MainWindow</span>()
+window.<span class="function">show</span>()  <span class="comment"># Now the window appears on screen</span></code></pre>
+
+            <h3>Closing a Window</h3>
+            <p>
+                Windows can be closed by:
+            </p>
+            <ul>
+                <li>Clicking the X button (generates a close event)</li>
+                <li>Calling <code>window.close()</code> programmatically</li>
+                <li>Pressing Alt+F4 (Windows) or Cmd+Q (macOS)</li>
+            </ul>
+
+            <div class="info-box tip">
+                <strong>Default Behavior:</strong> When the last window is closed, the application
+                automatically quits and <code>app.exec()</code> returns.
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Putting It All Together</h2>
+            <p>
+                Here's the complete pattern for a basic PyQt6 application:
+            </p>
+
+            <pre><code><span class="keyword">import</span> sys
+<span class="keyword">from</span> PyQt6.QtWidgets <span class="keyword">import</span> <span class="class-name">QApplication</span>, <span class="class-name">QWidget</span>
+
+
+<span class="keyword">class</span> <span class="class-name">MainWindow</span>(<span class="class-name">QWidget</span>):
+    <span class="string">"""Main application window."""</span>
+
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        <span class="function">super</span>().<span class="function">__init__</span>()
+        self.<span class="function">init_ui</span>()
+
+    <span class="keyword">def</span> <span class="function">init_ui</span>(self):
+        <span class="string">"""Initialize the user interface."""</span>
+        self.<span class="function">setWindowTitle</span>(<span class="string">"Desktop Agent"</span>)
+        self.<span class="function">setGeometry</span>(<span class="number">100</span>, <span class="number">100</span>, <span class="number">800</span>, <span class="number">600</span>)
+
+
+<span class="keyword">def</span> <span class="function">main</span>():
+    <span class="comment"># 1. Create the application</span>
+    app = <span class="class-name">QApplication</span>(sys.argv)
+
+    <span class="comment"># 2. Create and show the main window</span>
+    window = <span class="class-name">MainWindow</span>()
+    window.<span class="function">show</span>()
+
+    <span class="comment"># 3. Start the event loop</span>
+    sys.exit(app.<span class="function">exec</span>())
+
+
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    <span class="function">main</span>()</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Tasks for This Phase</h2>
+
+            <div class="task-list">
+                <h4>Implementation Tasks</h4>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Update <code>main.py</code> to create QApplication and run event loop</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Create <code>window.py</code> with MainWindow class extending QWidget</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Set window title to "Desktop Agent"</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Set initial window size (800x600)</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Test launching and closing the window</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Commit changes to Git and push to GitHub</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="phase-01-summary.html" class="nav-btn">
+                &larr; Phase 1 Summary
+            </a>
+            <a href="phase-02-summary.html" class="nav-btn next">
+                Continue to Implementation &rarr;
+            </a>
+        </div>
+    </div>
+</body>
+</html>
