@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 1: Project Setup - Introduction | Desktop Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e4e4e4;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .breadcrumb {
+            margin-bottom: 30px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #00d9ff;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        header {
+            margin-bottom: 40px;
+        }
+
+        .phase-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #888;
+        }
+
+        .objectives-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .objective-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #00d9ff;
+        }
+
+        .objective-card.learning {
+            border-left-color: #00ff88;
+        }
+
+        .objective-card h3 {
+            font-size: 0.9rem;
+            color: #00d9ff;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .objective-card.learning h3 {
+            color: #00ff88;
+        }
+
+        .objective-card p {
+            color: #bbb;
+            font-size: 0.95rem;
+        }
+
+        .content-section {
+            background: rgba(255,255,255,0.03);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            color: #00d9ff;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            color: #00ff88;
+            margin: 25px 0 15px 0;
+            font-weight: 400;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #bbb;
+        }
+
+        code {
+            background: rgba(0, 217, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #00d9ff;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #0a0a15;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e4e4e4;
+            display: block;
+            line-height: 1.6;
+        }
+
+        .comment {
+            color: #6a9955;
+        }
+
+        .command {
+            color: #00d9ff;
+        }
+
+        .output {
+            color: #888;
+        }
+
+        ul, ol {
+            margin: 15px 0 15px 25px;
+            color: #bbb;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .info-box {
+            background: rgba(0, 217, 255, 0.1);
+            border-left: 4px solid #00d9ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .info-box.tip {
+            background: rgba(0, 255, 136, 0.1);
+            border-left-color: #00ff88;
+        }
+
+        .info-box.warning {
+            background: rgba(255, 193, 7, 0.1);
+            border-left-color: #ffc107;
+        }
+
+        .info-box strong {
+            color: #fff;
+        }
+
+        .diagram {
+            background: #0a0a15;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+
+        .diagram .folder {
+            color: #00d9ff;
+        }
+
+        .diagram .file {
+            color: #00ff88;
+        }
+
+        .diagram .desc {
+            color: #666;
+        }
+
+        .task-list {
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .task-list h4 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .task {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .task:last-child {
+            border-bottom: none;
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00d9ff;
+            border-radius: 4px;
+            margin-right: 15px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .task-content {
+            color: #bbb;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 8px;
+            color: #00d9ff;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(0, 217, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.next {
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            color: #000;
+            border: none;
+            font-weight: 600;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        th {
+            background: rgba(0, 217, 255, 0.1);
+            color: #00d9ff;
+            font-weight: 500;
+        }
+
+        td {
+            color: #bbb;
+        }
+
+        td code {
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../project-overview.html">Desktop Agent</a> / Phase 1
+        </div>
+
+        <header>
+            <span class="phase-badge">Phase 1 of 10</span>
+            <h1>Project Setup & Foundations</h1>
+            <p class="subtitle">Building a solid foundation for your Python project</p>
+        </header>
+
+        <div class="objectives-box">
+            <div class="objective-card">
+                <h3>App Objective</h3>
+                <p>Set up the complete project structure with all necessary files, virtual environment, dependencies, and version control.</p>
+            </div>
+            <div class="objective-card learning">
+                <h3>Learning Objective</h3>
+                <p>Understand professional Python project organization, virtual environments, Git basics, and GitHub workflow.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Why Project Structure Matters</h2>
+            <p>
+                A well-organized project structure is like a well-organized workshop. When everything has its place,
+                you spend less time searching and more time building. Professional Python projects follow conventions
+                that make the code easier to understand, maintain, and share with others.
+            </p>
+
+            <h3>Our Project Structure</h3>
+            <div class="diagram">
+<span class="folder">Desktop Agent/</span>
+<span class="desc">                    # Project root</span>
+├── <span class="folder">docs/</span>
+<span class="desc">                        # Documentation</span>
+│   ├── project-overview.html
+│   └── <span class="folder">phases/</span>
+<span class="desc">                  # Phase documentation</span>
+├── <span class="folder">src/</span>
+<span class="desc">                         # Source code</span>
+│   └── <span class="folder">desktop_agent/</span>
+<span class="desc">           # Main package</span>
+│       ├── <span class="file">__init__.py</span>
+<span class="desc">          # Package marker</span>
+│       └── <span class="file">main.py</span>
+<span class="desc">              # Entry point</span>
+├── <span class="folder">screenshots/</span>
+<span class="desc">                 # Captured images</span>
+├── <span class="folder">venv/</span>
+<span class="desc">                        # Virtual environment</span>
+├── <span class="file">.gitignore</span>
+<span class="desc">                   # Git ignore rules</span>
+├── <span class="file">requirements.txt</span>
+<span class="desc">             # Dependencies</span>
+├── <span class="file">PLAN.md</span>
+<span class="desc">                      # Project plan</span>
+└── <span class="file">README.md</span>
+<span class="desc">                    # Project readme</span>
+            </div>
+
+            <div class="info-box">
+                <strong>Key Insight:</strong> The <code>src/</code> layout is a modern best practice. It prevents
+                accidental imports from the project root and makes testing cleaner. The package name
+                <code>desktop_agent</code> uses underscores (Python convention) rather than spaces or hyphens.
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Virtual Environments Explained</h2>
+            <p>
+                A virtual environment is an isolated Python installation for your project. Think of it as a
+                clean room where your project has its own set of tools, separate from other projects and your
+                system Python.
+            </p>
+
+            <h3>Why Use Virtual Environments?</h3>
+            <ul>
+                <li><strong>Isolation:</strong> Each project can have different versions of the same package</li>
+                <li><strong>Reproducibility:</strong> Others can recreate your exact environment</li>
+                <li><strong>Cleanliness:</strong> Your system Python stays uncluttered</li>
+                <li><strong>Safety:</strong> Experiments don't affect other projects</li>
+            </ul>
+
+            <h3>Common Commands</h3>
+            <pre><code><span class="comment"># Create a virtual environment (you've already done this!)</span>
+<span class="command">python -m venv venv</span>
+
+<span class="comment"># Activate it (Windows)</span>
+<span class="command">venv\Scripts\activate</span>
+
+<span class="comment"># Activate it (macOS/Linux)</span>
+<span class="command">source venv/bin/activate</span>
+
+<span class="comment"># When activated, your prompt shows (venv)</span>
+<span class="output">(venv) C:\Projects\Desktop Agent></span>
+
+<span class="comment"># Deactivate when done</span>
+<span class="command">deactivate</span></code></pre>
+
+            <div class="info-box tip">
+                <strong>Tip:</strong> Always activate your virtual environment before working on the project.
+                You'll know it's active when you see <code>(venv)</code> in your terminal prompt.
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Dependencies with requirements.txt</h2>
+            <p>
+                The <code>requirements.txt</code> file lists all packages your project needs. This allows anyone
+                to install the exact same dependencies with a single command.
+            </p>
+
+            <h3>Our Dependencies</h3>
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>Package</th>
+                        <th>Purpose</th>
+                        <th>Version</th>
+                    </tr>
+                    <tr>
+                        <td><code>PyQt6</code></td>
+                        <td>Desktop GUI framework - creates windows, buttons, layouts</td>
+                        <td>&gt;=6.6.0</td>
+                    </tr>
+                    <tr>
+                        <td><code>Pillow</code></td>
+                        <td>Image processing library - handles screenshots</td>
+                        <td>&gt;=10.0.0</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3>Installing Dependencies</h3>
+            <pre><code><span class="comment"># Install all dependencies from requirements.txt</span>
+<span class="command">pip install -r requirements.txt</span>
+
+<span class="comment"># Install a single package</span>
+<span class="command">pip install PyQt6</span>
+
+<span class="comment"># See what's installed</span>
+<span class="command">pip list</span>
+
+<span class="comment"># Save current packages to requirements.txt</span>
+<span class="command">pip freeze > requirements.txt</span></code></pre>
+
+            <div class="info-box warning">
+                <strong>Note:</strong> The <code>&gt;=6.6.0</code> syntax means "version 6.6.0 or higher".
+                This gives flexibility while ensuring compatibility. For production apps, you might pin
+                exact versions like <code>==6.6.1</code> for reproducibility.
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Git Version Control</h2>
+            <p>
+                Git tracks changes to your code over time. It's like having unlimited "undo" with the ability
+                to see exactly what changed, when, and why. Every professional software project uses version control.
+            </p>
+
+            <h3>Core Git Concepts</h3>
+            <ul>
+                <li><strong>Repository (repo):</strong> Your project folder, tracked by Git</li>
+                <li><strong>Commit:</strong> A snapshot of your code at a point in time</li>
+                <li><strong>Staging area:</strong> Where you prepare changes before committing</li>
+                <li><strong>Branch:</strong> A parallel version of your code (we'll use <code>main</code>)</li>
+            </ul>
+
+            <h3>Essential Git Commands</h3>
+            <pre><code><span class="comment"># Initialize a new repository</span>
+<span class="command">git init</span>
+
+<span class="comment"># Check status - see what's changed</span>
+<span class="command">git status</span>
+
+<span class="comment"># Stage files for commit</span>
+<span class="command">git add filename.py</span>
+<span class="command">git add .</span>              <span class="comment"># Stage all changes</span>
+
+<span class="comment"># Commit with a message</span>
+<span class="command">git commit -m "Add initial project structure"</span>
+
+<span class="comment"># View commit history</span>
+<span class="command">git log --oneline</span></code></pre>
+
+            <div class="info-box">
+                <strong>Commit Message Tips:</strong> Write messages in imperative mood ("Add feature" not
+                "Added feature"). Keep the first line under 50 characters. Be specific about what changed and why.
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>GitHub: Sharing & Collaboration</h2>
+            <p>
+                GitHub hosts your Git repository in the cloud. This provides backup, enables collaboration,
+                and makes your project accessible from anywhere. It's where most open-source projects live.
+            </p>
+
+            <h3>Git vs GitHub</h3>
+            <ul>
+                <li><strong>Git:</strong> The version control tool (runs locally)</li>
+                <li><strong>GitHub:</strong> A cloud service that hosts Git repositories</li>
+            </ul>
+
+            <h3>GitHub Workflow</h3>
+            <pre><code><span class="comment"># 1. Create a repo on GitHub (through the website)</span>
+
+<span class="comment"># 2. Connect your local repo to GitHub</span>
+<span class="command">git remote add origin https://github.com/username/desktop-agent.git</span>
+
+<span class="comment"># 3. Push your code to GitHub</span>
+<span class="command">git push -u origin main</span>
+
+<span class="comment"># 4. After making changes locally:</span>
+<span class="command">git add .</span>
+<span class="command">git commit -m "Your message"</span>
+<span class="command">git push</span>
+
+<span class="comment"># Pull changes from GitHub (if you edited online)</span>
+<span class="command">git pull</span></code></pre>
+
+            <div class="info-box tip">
+                <strong>The -u flag:</strong> Using <code>-u origin main</code> the first time sets up tracking.
+                After that, you can just use <code>git push</code> and <code>git pull</code> without extra arguments.
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>The .gitignore File</h2>
+            <p>
+                Not everything should be tracked by Git. The <code>.gitignore</code> file tells Git which
+                files and folders to ignore. This keeps your repository clean and avoids sharing sensitive
+                or unnecessary files.
+            </p>
+
+            <h3>What to Ignore</h3>
+            <ul>
+                <li><strong>Virtual environment:</strong> <code>venv/</code> - others will create their own</li>
+                <li><strong>Python cache:</strong> <code>__pycache__/</code>, <code>*.pyc</code> - generated files</li>
+                <li><strong>IDE settings:</strong> <code>.vscode/</code>, <code>.idea/</code> - personal preferences</li>
+                <li><strong>Secrets:</strong> <code>.env</code>, API keys - never commit these!</li>
+                <li><strong>Screenshots:</strong> <code>screenshots/</code> - user-generated content</li>
+            </ul>
+
+            <pre><code><span class="comment"># Example .gitignore for Python projects</span>
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+.vscode/
+.idea/
+screenshots/
+*.log</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>The __init__.py File</h2>
+            <p>
+                The <code>__init__.py</code> file marks a directory as a Python package. This allows you to
+                import modules from that directory. It can be empty or contain initialization code.
+            </p>
+
+            <pre><code><span class="comment"># src/desktop_agent/__init__.py</span>
+<span class="comment"># This file can be empty - its presence makes desktop_agent a package</span>
+
+<span class="comment"># Or it can define what's exported:</span>
+__version__ = "0.1.0"
+__author__ = "Your Name"</code></pre>
+
+            <p>
+                With this structure, you can run the application using:
+            </p>
+            <pre><code><span class="command">python -m desktop_agent.main</span></code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Tasks for This Phase</h2>
+
+            <div class="task-list">
+                <h4>Implementation Tasks</h4>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Create <code>src/desktop_agent/</code> directory structure</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Create <code>__init__.py</code> with version info</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Create basic <code>main.py</code> entry point</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Create <code>requirements.txt</code> with PyQt6 and Pillow</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Install dependencies in virtual environment</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Create <code>screenshots/</code> directory</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Initialize Git repository</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Create comprehensive <code>.gitignore</code></div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Create GitHub repository</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Push initial commit to GitHub</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="../project-overview.html" class="nav-btn">
+                &larr; Project Overview
+            </a>
+            <a href="phase-01-summary.html" class="nav-btn next">
+                Continue to Implementation &rarr;
+            </a>
+        </div>
+    </div>
+</body>
+</html>
