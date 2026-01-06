@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 3: Transparent Overlay - Introduction | Desktop Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e4e4e4;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .breadcrumb {
+            margin-bottom: 30px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #00d9ff;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        header {
+            margin-bottom: 40px;
+        }
+
+        .phase-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #888;
+        }
+
+        .objectives-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .objective-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #00d9ff;
+        }
+
+        .objective-card.learning {
+            border-left-color: #00ff88;
+        }
+
+        .objective-card h3 {
+            font-size: 0.9rem;
+            color: #00d9ff;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .objective-card.learning h3 {
+            color: #00ff88;
+        }
+
+        .objective-card p {
+            color: #bbb;
+            font-size: 0.95rem;
+        }
+
+        .content-section {
+            background: rgba(255,255,255,0.03);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            color: #00d9ff;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            color: #00ff88;
+            margin: 25px 0 15px 0;
+            font-weight: 400;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #bbb;
+        }
+
+        code {
+            background: rgba(0, 217, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #00d9ff;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #0a0a15;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e4e4e4;
+            display: block;
+            line-height: 1.6;
+        }
+
+        .keyword { color: #c586c0; }
+        .function { color: #dcdcaa; }
+        .class-name { color: #4ec9b0; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; }
+        .number { color: #b5cea8; }
+
+        ul, ol {
+            margin: 15px 0 15px 25px;
+            color: #bbb;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .info-box {
+            background: rgba(0, 217, 255, 0.1);
+            border-left: 4px solid #00d9ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .info-box.tip {
+            background: rgba(0, 255, 136, 0.1);
+            border-left-color: #00ff88;
+        }
+
+        .info-box.warning {
+            background: rgba(255, 193, 7, 0.1);
+            border-left-color: #ffc107;
+        }
+
+        .info-box strong {
+            color: #fff;
+        }
+
+        .visual-diagram {
+            background: #0a0a15;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .window-mockup {
+            display: inline-block;
+            border: 3px solid #00d9ff;
+            border-radius: 10px;
+            width: 300px;
+            height: 200px;
+            position: relative;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.03) 10px,
+                rgba(255,255,255,0.03) 20px
+            );
+        }
+
+        .window-mockup::after {
+            content: "Screen content visible through here";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #666;
+            font-size: 0.85rem;
+            text-align: center;
+            width: 80%;
+        }
+
+        .window-mockup .border-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #00d9ff;
+            font-size: 0.8rem;
+        }
+
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .concept-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .concept-card h4 {
+            color: #00d9ff;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .concept-card p {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .flag-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .flag-table th,
+        .flag-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .flag-table th {
+            background: rgba(0, 217, 255, 0.1);
+            color: #00d9ff;
+            font-weight: 500;
+        }
+
+        .flag-table td {
+            color: #bbb;
+        }
+
+        .flag-table td code {
+            font-size: 0.85em;
+        }
+
+        .task-list {
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .task-list h4 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .task {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .task:last-child {
+            border-bottom: none;
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00d9ff;
+            border-radius: 4px;
+            margin-right: 15px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .task-content {
+            color: #bbb;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 8px;
+            color: #00d9ff;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(0, 217, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.next {
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            color: #000;
+            border: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../project-overview.html">Desktop Agent</a> / Phase 3
+        </div>
+
+        <header>
+            <span class="phase-badge">Phase 3 of 10</span>
+            <h1>Transparent Overlay & Frame</h1>
+            <p class="subtitle">Creating a see-through window with a visible border</p>
+        </header>
+
+        <div class="objectives-box">
+            <div class="objective-card">
+                <h3>App Objective</h3>
+                <p>Transform our window into a transparent overlay with a visible frame border that lets you see the screen content underneath.</p>
+            </div>
+            <div class="objective-card learning">
+                <h3>Learning Objective</h3>
+                <p>Learn about frameless windows, window transparency, custom painting with QPainter, and Qt window flags.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>The Vision</h2>
+            <p>
+                Our Desktop Agent needs to act as a "viewfinder" - a frame you can position over any part of your screen.
+                The center should be completely transparent so you can see what's underneath, while the border remains
+                visible so you know where the capture area is.
+            </p>
+
+            <div class="visual-diagram">
+                <div class="window-mockup">
+                    <span class="border-label">Visible cyan border</span>
+                </div>
+                <p style="color: #666; margin-top: 15px; font-size: 0.9rem;">
+                    The frame border is visible, but the inside is transparent
+                </p>
+            </div>
+
+            <p>
+                To achieve this, we need to combine several Qt features:
+            </p>
+            <ul>
+                <li>Remove the default window frame (title bar, borders)</li>
+                <li>Make the window background transparent</li>
+                <li>Draw our own custom border using QPainter</li>
+                <li>Keep the window on top of other windows</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Window Flags</h2>
+            <p>
+                Qt uses "window flags" to control how a window behaves and appears. These are bit flags
+                that can be combined using the <code>|</code> (OR) operator.
+            </p>
+
+            <table class="flag-table">
+                <tr>
+                    <th>Flag</th>
+                    <th>Purpose</th>
+                </tr>
+                <tr>
+                    <td><code>Qt.WindowType.FramelessWindowHint</code></td>
+                    <td>Removes the title bar and default window borders</td>
+                </tr>
+                <tr>
+                    <td><code>Qt.WindowType.WindowStaysOnTopHint</code></td>
+                    <td>Keeps the window above all other windows</td>
+                </tr>
+                <tr>
+                    <td><code>Qt.WindowType.Tool</code></td>
+                    <td>Makes it a tool window (smaller taskbar presence)</td>
+                </tr>
+            </table>
+
+            <pre><code><span class="comment"># Combining multiple flags</span>
+self.<span class="function">setWindowFlags</span>(
+    <span class="class-name">Qt</span>.WindowType.FramelessWindowHint |
+    <span class="class-name">Qt</span>.WindowType.WindowStaysOnTopHint
+)</code></pre>
+
+            <div class="info-box warning">
+                <strong>Important:</strong> Once you remove the window frame, you lose the default title bar,
+                close button, and the ability to drag/resize the window. We'll add these back ourselves in Phase 4!
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Window Transparency</h2>
+            <p>
+                Qt supports different levels of transparency. For our overlay, we want the window itself
+                to be completely transparent, then we'll draw only what we want to be visible.
+            </p>
+
+            <h3>The Widget Attribute</h3>
+            <pre><code><span class="comment"># Enable translucent (transparent) background</span>
+self.<span class="function">setAttribute</span>(<span class="class-name">Qt</span>.WidgetAttribute.WA_TranslucentBackground)</code></pre>
+
+            <p>
+                This tells Qt that our window's background should be transparent. Without this,
+                even a frameless window would have an opaque background.
+            </p>
+
+            <h3>How It Works</h3>
+            <div class="concept-grid">
+                <div class="concept-card">
+                    <h4>Without Translucent</h4>
+                    <p>Window has solid background color, even if frameless.</p>
+                </div>
+                <div class="concept-card">
+                    <h4>With Translucent</h4>
+                    <p>Window is invisible by default - you paint what you want visible.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Custom Painting with QPainter</h2>
+            <p>
+                QPainter is Qt's 2D drawing engine. It can draw shapes, text, images, and more onto any widget.
+                To use it, we override the <code>paintEvent</code> method.
+            </p>
+
+            <h3>The Paint Event</h3>
+            <p>
+                Qt calls <code>paintEvent()</code> whenever a widget needs to be redrawn - when it first
+                appears, when it's resized, when another window moves away from it, etc.
+            </p>
+
+            <pre><code><span class="keyword">from</span> PyQt6.QtGui <span class="keyword">import</span> <span class="class-name">QPainter</span>, <span class="class-name">QPen</span>, <span class="class-name">QColor</span>
+
+<span class="keyword">def</span> <span class="function">paintEvent</span>(self, event):
+    painter = <span class="class-name">QPainter</span>(self)
+
+    <span class="comment"># Set up the pen (for lines/borders)</span>
+    pen = <span class="class-name">QPen</span>(<span class="class-name">QColor</span>(<span class="number">0</span>, <span class="number">217</span>, <span class="number">255</span>))  <span class="comment"># Cyan color</span>
+    pen.<span class="function">setWidth</span>(<span class="number">3</span>)
+    painter.<span class="function">setPen</span>(pen)
+
+    <span class="comment"># Draw a rectangle (the frame border)</span>
+    painter.<span class="function">drawRect</span>(self.<span class="function">rect</span>().<span class="function">adjusted</span>(<span class="number">1</span>, <span class="number">1</span>, <span class="number">-2</span>, <span class="number">-2</span>))
+
+    painter.<span class="function">end</span>()</code></pre>
+
+            <h3>Key QPainter Concepts</h3>
+            <div class="concept-grid">
+                <div class="concept-card">
+                    <h4>QPen</h4>
+                    <p>Defines how lines and borders are drawn (color, width, style).</p>
+                </div>
+                <div class="concept-card">
+                    <h4>QBrush</h4>
+                    <p>Defines how shapes are filled (we won't fill - keep transparent).</p>
+                </div>
+                <div class="concept-card">
+                    <h4>QColor</h4>
+                    <p>Represents colors. Can use RGB, hex, or named colors.</p>
+                </div>
+                <div class="concept-card">
+                    <h4>drawRect()</h4>
+                    <p>Draws a rectangle outline (or filled, depending on brush).</p>
+                </div>
+            </div>
+
+            <div class="info-box tip">
+                <strong>Why adjusted()?</strong> The <code>rect().adjusted(1, 1, -2, -2)</code> shrinks the
+                rectangle slightly so the border draws fully inside the window bounds, not clipped at edges.
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Anti-Aliasing</h2>
+            <p>
+                Anti-aliasing smooths out jagged edges on lines and shapes. It makes our border look
+                cleaner, especially on high-resolution displays.
+            </p>
+
+            <pre><code>painter.<span class="function">setRenderHint</span>(<span class="class-name">QPainter</span>.RenderHint.Antialiasing)</code></pre>
+
+            <div class="visual-diagram">
+                <div style="display: flex; justify-content: center; gap: 50px;">
+                    <div style="text-align: center;">
+                        <div style="border: 3px solid #666; width: 100px; height: 60px; border-radius: 5px;"></div>
+                        <p style="color: #666; margin-top: 10px; font-size: 0.8rem;">Without anti-aliasing<br>(jagged edges)</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="border: 3px solid #00d9ff; width: 100px; height: 60px; border-radius: 5px;"></div>
+                        <p style="color: #666; margin-top: 10px; font-size: 0.8rem;">With anti-aliasing<br>(smooth edges)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Rounded Corners (Optional)</h2>
+            <p>
+                Instead of <code>drawRect()</code>, we can use <code>drawRoundedRect()</code> to give
+                our frame rounded corners for a more modern look.
+            </p>
+
+            <pre><code><span class="comment"># Draw rectangle with 10px corner radius</span>
+painter.<span class="function">drawRoundedRect</span>(
+    self.<span class="function">rect</span>().<span class="function">adjusted</span>(<span class="number">1</span>, <span class="number">1</span>, <span class="number">-2</span>, <span class="number">-2</span>),
+    <span class="number">10</span>,  <span class="comment"># x radius</span>
+    <span class="number">10</span>   <span class="comment"># y radius</span>
+)</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>The Complete Picture</h2>
+            <p>Here's how all the pieces fit together:</p>
+
+            <pre><code><span class="keyword">from</span> PyQt6.QtWidgets <span class="keyword">import</span> <span class="class-name">QWidget</span>
+<span class="keyword">from</span> PyQt6.QtCore <span class="keyword">import</span> <span class="class-name">Qt</span>
+<span class="keyword">from</span> PyQt6.QtGui <span class="keyword">import</span> <span class="class-name">QPainter</span>, <span class="class-name">QPen</span>, <span class="class-name">QColor</span>
+
+<span class="keyword">class</span> <span class="class-name">MainWindow</span>(<span class="class-name">QWidget</span>):
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        <span class="function">super</span>().<span class="function">__init__</span>()
+
+        <span class="comment"># 1. Remove window frame</span>
+        self.<span class="function">setWindowFlags</span>(
+            <span class="class-name">Qt</span>.WindowType.FramelessWindowHint |
+            <span class="class-name">Qt</span>.WindowType.WindowStaysOnTopHint
+        )
+
+        <span class="comment"># 2. Make background transparent</span>
+        self.<span class="function">setAttribute</span>(<span class="class-name">Qt</span>.WidgetAttribute.WA_TranslucentBackground)
+
+        <span class="comment"># 3. Set size</span>
+        self.<span class="function">setGeometry</span>(<span class="number">100</span>, <span class="number">100</span>, <span class="number">800</span>, <span class="number">600</span>)
+
+    <span class="keyword">def</span> <span class="function">paintEvent</span>(self, event):
+        <span class="comment"># 4. Draw custom border</span>
+        painter = <span class="class-name">QPainter</span>(self)
+        painter.<span class="function">setRenderHint</span>(<span class="class-name">QPainter</span>.RenderHint.Antialiasing)
+
+        pen = <span class="class-name">QPen</span>(<span class="class-name">QColor</span>(<span class="number">0</span>, <span class="number">217</span>, <span class="number">255</span>))
+        pen.<span class="function">setWidth</span>(<span class="number">3</span>)
+        painter.<span class="function">setPen</span>(pen)
+
+        painter.<span class="function">drawRoundedRect</span>(
+            self.<span class="function">rect</span>().<span class="function">adjusted</span>(<span class="number">1</span>, <span class="number">1</span>, <span class="number">-2</span>, <span class="number">-2</span>),
+            <span class="number">10</span>, <span class="number">10</span>
+        )
+        painter.<span class="function">end</span>()</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Tasks for This Phase</h2>
+
+            <div class="task-list">
+                <h4>Implementation Tasks</h4>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Add <code>FramelessWindowHint</code> to remove default window chrome</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Add <code>WindowStaysOnTopHint</code> to keep overlay on top</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Enable <code>WA_TranslucentBackground</code> for transparency</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Override <code>paintEvent</code> to draw custom border</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Use QPainter with anti-aliasing and cyan pen</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Draw rounded rectangle for frame border</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Test that screen content is visible through the frame</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-box warning">
+            <strong>Note:</strong> After this phase, you won't be able to drag or close the window normally!
+            The frameless window has no title bar. To close it, you'll need to use Alt+F4 or stop the program
+            from the terminal (Ctrl+C). We'll fix this in Phase 4 by adding our own drag functionality.
+        </div>
+
+        <div class="nav-buttons">
+            <a href="phase-02-summary.html" class="nav-btn">
+                &larr; Phase 2 Summary
+            </a>
+            <a href="phase-03-summary.html" class="nav-btn next">
+                Continue to Implementation &rarr;
+            </a>
+        </div>
+    </div>
+</body>
+</html>
