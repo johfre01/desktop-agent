@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 5: Control Panel UI - Introduction | Desktop Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e4e4e4;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .breadcrumb {
+            margin-bottom: 30px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #00d9ff;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        header {
+            margin-bottom: 40px;
+        }
+
+        .phase-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #888;
+        }
+
+        .objectives-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .objective-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #00d9ff;
+        }
+
+        .objective-card.learning {
+            border-left-color: #00ff88;
+        }
+
+        .objective-card h3 {
+            font-size: 0.9rem;
+            color: #00d9ff;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .objective-card.learning h3 {
+            color: #00ff88;
+        }
+
+        .objective-card p {
+            color: #bbb;
+            font-size: 0.95rem;
+        }
+
+        .content-section {
+            background: rgba(255,255,255,0.03);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            color: #00d9ff;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            color: #00ff88;
+            margin: 25px 0 15px 0;
+            font-weight: 400;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #bbb;
+        }
+
+        code {
+            background: rgba(0, 217, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #00d9ff;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #0a0a15;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e4e4e4;
+            display: block;
+            line-height: 1.6;
+        }
+
+        .keyword { color: #c586c0; }
+        .function { color: #dcdcaa; }
+        .class-name { color: #4ec9b0; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; }
+        .number { color: #b5cea8; }
+
+        ul, ol {
+            margin: 15px 0 15px 25px;
+            color: #bbb;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .info-box {
+            background: rgba(0, 217, 255, 0.1);
+            border-left: 4px solid #00d9ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .info-box.tip {
+            background: rgba(0, 255, 136, 0.1);
+            border-left-color: #00ff88;
+        }
+
+        .info-box.warning {
+            background: rgba(255, 193, 7, 0.1);
+            border-left-color: #ffc107;
+        }
+
+        .info-box strong {
+            color: #fff;
+        }
+
+        .layout-diagram {
+            background: #0a0a15;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .layout-box {
+            border: 2px dashed #00d9ff;
+            padding: 15px;
+            margin: 10px auto;
+            max-width: 400px;
+        }
+
+        .layout-box.vbox {
+            border-color: #00ff88;
+        }
+
+        .layout-item {
+            background: rgba(0, 217, 255, 0.2);
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            color: #00d9ff;
+            font-size: 0.9rem;
+        }
+
+        .layout-item.hbox {
+            display: flex;
+            gap: 10px;
+            background: none;
+            padding: 0;
+        }
+
+        .layout-item.hbox > div {
+            background: rgba(0, 217, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 5px;
+            flex: 1;
+        }
+
+        .widget-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .widget-table th,
+        .widget-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .widget-table th {
+            background: rgba(0, 217, 255, 0.1);
+            color: #00d9ff;
+            font-weight: 500;
+        }
+
+        .widget-table td {
+            color: #bbb;
+        }
+
+        .qss-example {
+            background: #0a0a15;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .qss-example h4 {
+            color: #00ff88;
+            margin-bottom: 15px;
+        }
+
+        .task-list {
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .task-list h4 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .task {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .task:last-child {
+            border-bottom: none;
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00d9ff;
+            border-radius: 4px;
+            margin-right: 15px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .task-content {
+            color: #bbb;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 8px;
+            color: #00d9ff;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(0, 217, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.next {
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            color: #000;
+            border: none;
+            font-weight: 600;
+        }
+
+        .ui-mockup {
+            border: 2px solid #00d9ff;
+            border-radius: 5px;
+            overflow: hidden;
+            max-width: 500px;
+            margin: 20px auto;
+        }
+
+        .ui-mockup-frame {
+            height: 150px;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.02) 10px,
+                rgba(255,255,255,0.02) 20px
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #444;
+            font-size: 0.9rem;
+        }
+
+        .ui-mockup-panel {
+            background: #1a1a2e;
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .ui-mockup-btn {
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            color: #000;
+            padding: 8px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .ui-mockup-input {
+            flex: 1;
+            background: #0a0a15;
+            border: 1px solid #333;
+            padding: 8px 12px;
+            border-radius: 5px;
+            color: #666;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../project-overview.html">Desktop Agent</a> / Phase 5
+        </div>
+
+        <header>
+            <span class="phase-badge">Phase 5 of 10</span>
+            <h1>Control Panel UI</h1>
+            <p class="subtitle">Adding the Capture button and chat input</p>
+        </header>
+
+        <div class="objectives-box">
+            <div class="objective-card">
+                <h3>App Objective</h3>
+                <p>Add a control panel at the bottom of the frame with a Capture button and chat input field.</p>
+            </div>
+            <div class="objective-card learning">
+                <h3>Learning Objective</h3>
+                <p>Learn Qt layouts, widget composition, and styling with Qt Style Sheets (QSS).</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>The Target UI</h2>
+            <p>
+                We'll add a panel at the bottom of our transparent frame. This panel will be solid (not transparent)
+                and contain the controls users need.
+            </p>
+
+            <div class="layout-diagram">
+                <div class="ui-mockup">
+                    <div class="ui-mockup-frame">Transparent capture area</div>
+                    <div class="ui-mockup-panel">
+                        <div class="ui-mockup-btn">Capture</div>
+                        <div class="ui-mockup-input">Ask about this screenshot...</div>
+                    </div>
+                </div>
+                <p style="color: #666; margin-top: 15px; font-size: 0.9rem;">
+                    The control panel sits at the bottom with solid background
+                </p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Qt Layouts</h2>
+            <p>
+                Layouts automatically arrange widgets and handle resizing. Instead of manually positioning
+                widgets with coordinates, you add them to a layout and it does the work for you.
+            </p>
+
+            <h3>QVBoxLayout - Vertical Stack</h3>
+            <p>Arranges widgets in a vertical column, top to bottom.</p>
+            <div class="layout-diagram">
+                <div class="layout-box vbox">
+                    <div class="layout-item">Widget 1</div>
+                    <div class="layout-item">Widget 2</div>
+                    <div class="layout-item">Widget 3</div>
+                </div>
+                <p style="color: #00ff88; font-size: 0.8rem; margin-top: 10px;">QVBoxLayout</p>
+            </div>
+
+            <h3>QHBoxLayout - Horizontal Row</h3>
+            <p>Arranges widgets in a horizontal row, left to right.</p>
+            <div class="layout-diagram">
+                <div class="layout-box">
+                    <div class="layout-item hbox">
+                        <div>Widget 1</div>
+                        <div>Widget 2</div>
+                        <div>Widget 3</div>
+                    </div>
+                </div>
+                <p style="color: #00d9ff; font-size: 0.8rem; margin-top: 10px;">QHBoxLayout</p>
+            </div>
+
+            <h3>Nesting Layouts</h3>
+            <p>Layouts can be nested to create complex arrangements:</p>
+            <pre><code><span class="comment"># Main vertical layout</span>
+main_layout = <span class="class-name">QVBoxLayout</span>()
+
+<span class="comment"># Horizontal layout for the panel</span>
+panel_layout = <span class="class-name">QHBoxLayout</span>()
+panel_layout.<span class="function">addWidget</span>(capture_button)
+panel_layout.<span class="function">addWidget</span>(chat_input)
+
+<span class="comment"># Add panel to main layout</span>
+main_layout.<span class="function">addLayout</span>(panel_layout)</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Common Widgets</h2>
+
+            <table class="widget-table">
+                <tr>
+                    <th>Widget</th>
+                    <th>Purpose</th>
+                    <th>Key Signal</th>
+                </tr>
+                <tr>
+                    <td><code>QPushButton</code></td>
+                    <td>Clickable button</td>
+                    <td><code>clicked</code></td>
+                </tr>
+                <tr>
+                    <td><code>QLineEdit</code></td>
+                    <td>Single-line text input</td>
+                    <td><code>returnPressed</code></td>
+                </tr>
+                <tr>
+                    <td><code>QLabel</code></td>
+                    <td>Display text or image</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td><code>QWidget</code></td>
+                    <td>Container for other widgets</td>
+                    <td>-</td>
+                </tr>
+            </table>
+
+            <h3>Creating Widgets</h3>
+            <pre><code><span class="keyword">from</span> PyQt6.QtWidgets <span class="keyword">import</span> <span class="class-name">QPushButton</span>, <span class="class-name">QLineEdit</span>
+
+<span class="comment"># Create a button</span>
+button = <span class="class-name">QPushButton</span>(<span class="string">"Capture"</span>)
+button.clicked.<span class="function">connect</span>(self.on_capture_clicked)
+
+<span class="comment"># Create a text input</span>
+text_input = <span class="class-name">QLineEdit</span>()
+text_input.<span class="function">setPlaceholderText</span>(<span class="string">"Ask about this screenshot..."</span>)</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Qt Style Sheets (QSS)</h2>
+            <p>
+                QSS is like CSS for Qt widgets. It lets you customize colors, fonts, borders, and more.
+                The syntax is very similar to CSS.
+            </p>
+
+            <h3>Basic Syntax</h3>
+            <pre><code><span class="comment"># Apply style to a single widget</span>
+button.<span class="function">setStyleSheet</span>(<span class="string">"""
+    QPushButton {
+        background-color: #00d9ff;
+        color: black;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+    QPushButton:hover {
+        background-color: #00ff88;
+    }
+"""</span>)</code></pre>
+
+            <h3>Common QSS Properties</h3>
+            <table class="widget-table">
+                <tr>
+                    <th>Property</th>
+                    <th>Example</th>
+                </tr>
+                <tr>
+                    <td><code>background-color</code></td>
+                    <td><code>#1a1a2e</code> or <code>rgba(0,0,0,0.5)</code></td>
+                </tr>
+                <tr>
+                    <td><code>color</code></td>
+                    <td><code>white</code> or <code>#00d9ff</code></td>
+                </tr>
+                <tr>
+                    <td><code>border</code></td>
+                    <td><code>1px solid #333</code></td>
+                </tr>
+                <tr>
+                    <td><code>border-radius</code></td>
+                    <td><code>5px</code></td>
+                </tr>
+                <tr>
+                    <td><code>padding</code></td>
+                    <td><code>10px</code> or <code>10px 20px</code></td>
+                </tr>
+                <tr>
+                    <td><code>font-size</code></td>
+                    <td><code>14px</code></td>
+                </tr>
+            </table>
+
+            <div class="info-box tip">
+                <strong>Pseudo-states:</strong> Like CSS, QSS supports states like <code>:hover</code>,
+                <code>:pressed</code>, <code>:focus</code>, and <code>:disabled</code>.
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Integrating with Our Window</h2>
+            <p>
+                Our challenge is combining a transparent frame area with a solid panel. We'll:
+            </p>
+            <ol>
+                <li>Create the panel as a child widget with its own background</li>
+                <li>Position it at the bottom using a layout</li>
+                <li>Adjust the frame painting to account for the panel</li>
+                <li>Update mouse handling to work with the panel</li>
+            </ol>
+
+            <div class="info-box warning">
+                <strong>Important:</strong> The panel will be a solid widget at the bottom. We need to
+                make sure our transparent overlay doesn't paint over it, and that mouse events work
+                correctly for both dragging the frame and clicking panel buttons.
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Signals and Slots Refresher</h2>
+            <p>
+                When the user clicks the Capture button, we want something to happen. Qt uses signals
+                and slots for this:
+            </p>
+
+            <pre><code><span class="comment"># Connect button click to a method</span>
+self.capture_button.clicked.<span class="function">connect</span>(self.on_capture_clicked)
+
+<span class="keyword">def</span> <span class="function">on_capture_clicked</span>(self):
+    <span class="function">print</span>(<span class="string">"Capture button clicked!"</span>)
+    <span class="comment"># Screenshot logic will go here in Phase 6</span></code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Tasks for This Phase</h2>
+
+            <div class="task-list">
+                <h4>Implementation Tasks</h4>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Create a control panel widget with solid background</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Add Capture button with gradient styling</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Add chat input field with placeholder text</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Use QHBoxLayout for horizontal arrangement</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Position panel at bottom of frame</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Style panel with dark background</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Connect Capture button click (placeholder action)</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Ensure panel doesn't interfere with frame dragging</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="phase-04-summary.html" class="nav-btn">
+                &larr; Phase 4 Summary
+            </a>
+            <a href="phase-05-summary.html" class="nav-btn next">
+                Continue to Implementation &rarr;
+            </a>
+        </div>
+    </div>
+</body>
+</html>

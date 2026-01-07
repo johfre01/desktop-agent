@@ -2,13 +2,95 @@
 Desktop Agent - Main Window
 
 This module contains the MainWindow class that serves as the primary
-application window - a transparent overlay with a visible frame border
-that can be dragged and resized.
+application window - a transparent overlay with a visible frame border,
+control panel, and drag/resize functionality.
 """
 
-from PyQt6.QtWidgets import QWidget
+from PyQt6.QtWidgets import (
+    QWidget, QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QApplication
+)
 from PyQt6.QtCore import Qt, QPoint
 from PyQt6.QtGui import QPainter, QPen, QColor
+
+
+class ControlPanel(QWidget):
+    """
+    Control panel widget containing the Capture button and chat input.
+
+    This panel sits at the bottom of the main window and provides
+    the user interface for capturing screenshots and (later) chatting
+    with the LLM.
+    """
+
+    # Panel settings
+    PANEL_HEIGHT = 50
+    PANEL_COLOR = "#1a1a2e"
+
+    def __init__(self, parent=None):
+        """Initialize the control panel."""
+        super().__init__(parent)
+        self.init_ui()
+
+    def init_ui(self):
+        """Set up the control panel UI."""
+        # Set fixed height
+        self.setFixedHeight(self.PANEL_HEIGHT)
+
+        # Make panel opaque with dark background
+        self.setAutoFillBackground(True)
+        self.setStyleSheet(f"background-color: {self.PANEL_COLOR};")
+
+        # Create horizontal layout
+        layout = QHBoxLayout(self)
+        layout.setContentsMargins(10, 8, 10, 8)
+        layout.setSpacing(10)
+
+        # Create Capture button
+        self.capture_button = QPushButton("Capture")
+        self.capture_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.capture_button.setStyleSheet("""
+            QPushButton {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #00d9ff, stop:1 #00ff88);
+                color: black;
+                border: none;
+                padding: 8px 24px;
+                border-radius: 4px;
+                font-weight: bold;
+                font-size: 13px;
+            }
+            QPushButton:hover {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #00ff88, stop:1 #00d9ff);
+            }
+            QPushButton:pressed {
+                background: #00b8d4;
+            }
+        """)
+
+        # Create chat input
+        self.chat_input = QLineEdit()
+        self.chat_input.setPlaceholderText("Ask about this screenshot...")
+        self.chat_input.setStyleSheet("""
+            QLineEdit {
+                background-color: #0a0a15;
+                color: #e4e4e4;
+                border: 1px solid #333;
+                border-radius: 4px;
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+            QLineEdit:focus {
+                border-color: #00d9ff;
+            }
+            QLineEdit::placeholder {
+                color: #666;
+            }
+        """)
+
+        # Add widgets to layout
+        layout.addWidget(self.capture_button)
+        layout.addWidget(self.chat_input, 1)  # stretch factor 1 to take remaining space
 
 
 class MainWindow(QWidget):
@@ -22,6 +104,7 @@ class MainWindow(QWidget):
     - Stays on top of other windows
     - Draggable from center area
     - Resizable from edges and corners
+    - Control panel at the bottom
     """
 
     # Frame border settings
@@ -63,7 +146,40 @@ class MainWindow(QWidget):
         self.setGeometry(100, 100, 800, 600)
 
         # Minimum size to prevent window from becoming too small
-        self.setMinimumSize(200, 150)
+        self.setMinimumSize(300, 200)
+
+        # Create main layout
+        main_layout = QVBoxLayout(self)
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(0)
+
+        # Add spacer to push panel to bottom
+        main_layout.addStretch(1)
+
+        # Create and add control panel
+        self.control_panel = ControlPanel(self)
+        main_layout.addWidget(self.control_panel)
+
+        # Connect signals
+        self.control_panel.capture_button.clicked.connect(self.on_capture_clicked)
+        self.control_panel.chat_input.returnPressed.connect(self.on_chat_submit)
+
+    def on_capture_clicked(self):
+        """Handle Capture button click."""
+        print("Capture button clicked!")
+        # Screenshot logic will be implemented in Phase 6
+
+    def on_chat_submit(self):
+        """Handle chat input submission."""
+        text = self.control_panel.chat_input.text()
+        if text.strip():
+            print(f"Chat submitted: {text}")
+            # LLM integration will be implemented in Phase 8
+            self.control_panel.chat_input.clear()
+
+    def get_panel_height(self):
+        """Get the height of the control panel."""
+        return self.control_panel.height() if hasattr(self, 'control_panel') else 0
 
     def get_edge_at_position(self, pos):
         """
@@ -80,12 +196,17 @@ class MainWindow(QWidget):
         x, y = pos.x(), pos.y()
         width, height = self.width(), self.height()
         margin = self.EDGE_MARGIN
+        panel_height = self.get_panel_height()
+
+        # If clicking in the panel area, don't handle as edge/drag
+        if y > height - panel_height:
+            return 'panel'  # Special value to indicate panel area
 
         # Determine which edges we're near
         near_left = x < margin
         near_right = x > width - margin
         near_top = y < margin
-        near_bottom = y > height - margin
+        near_bottom = y > height - panel_height - margin
 
         # Check corners first (they take priority)
         if near_top and near_left:
@@ -120,7 +241,9 @@ class MainWindow(QWidget):
         Returns:
             Qt.CursorShape for the edge
         """
-        if edge is None:
+        if edge == 'panel':
+            return Qt.CursorShape.ArrowCursor
+        elif edge is None:
             return Qt.CursorShape.SizeAllCursor  # Move cursor for drag
         elif edge in ('left', 'right'):
             return Qt.CursorShape.SizeHorCursor
@@ -136,12 +259,18 @@ class MainWindow(QWidget):
     def mousePressEvent(self, event):
         """Handle mouse button press to start drag or resize."""
         if event.button() == Qt.MouseButton.LeftButton:
+            edge = self.get_edge_at_position(event.position().toPoint())
+
+            # Don't handle drag/resize if clicking in panel
+            if edge == 'panel':
+                return
+
             # Store starting position and geometry
             self._drag_start_pos = event.globalPosition().toPoint()
             self._drag_start_geometry = self.geometry()
 
             # Determine if we're resizing (edge) or dragging (center)
-            self._resize_edge = self.get_edge_at_position(event.position().toPoint())
+            self._resize_edge = edge
 
     def mouseMoveEvent(self, event):
         """Handle mouse movement for cursor updates and drag/resize."""
@@ -178,7 +307,13 @@ class MainWindow(QWidget):
         if self._resize_edge is None:
             # Dragging - move the window
             new_pos = self._drag_start_geometry.topLeft() + delta
-            self.move(new_pos)
+
+            # Constrain to screen boundaries
+            screen = QApplication.primaryScreen().availableGeometry()
+            new_x = max(screen.left(), min(new_pos.x(), screen.right() - self.width()))
+            new_y = max(screen.top(), min(new_pos.y(), screen.bottom() - self.height()))
+
+            self.move(new_x, new_y)
         else:
             # Resizing - adjust geometry based on which edge
             self._do_resize(delta)
@@ -240,9 +375,13 @@ class MainWindow(QWidget):
         # Enable anti-aliasing for smoother edges
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
-        # Fill with nearly-invisible color to capture mouse events
-        # (fully transparent areas don't receive mouse events)
-        painter.fillRect(self.rect(), QColor(0, 0, 0, 1))
+        # Get panel height to know where frame ends
+        panel_height = self.get_panel_height()
+
+        # Fill the frame area (above panel) with nearly-invisible color
+        # to capture mouse events
+        frame_rect = self.rect().adjusted(0, 0, 0, -panel_height)
+        painter.fillRect(frame_rect, QColor(0, 0, 0, 1))
 
         # Set up the pen for drawing the border
         pen = QPen(self.BORDER_COLOR)
@@ -252,16 +391,18 @@ class MainWindow(QWidget):
         # Don't fill the rectangle (keep it transparent inside)
         painter.setBrush(Qt.BrushStyle.NoBrush)
 
-        # Draw the frame border
-        # adjusted() shrinks the rect so the border draws fully inside
-        rect = self.rect().adjusted(
+        # Draw the frame border (excluding panel area)
+        border_rect = frame_rect.adjusted(
             self.BORDER_WIDTH // 2,
             self.BORDER_WIDTH // 2,
             -self.BORDER_WIDTH // 2 - 1,
-            -self.BORDER_WIDTH // 2 - 1
+            -self.BORDER_WIDTH // 2
         )
 
-        # Draw rectangle with sharp corners
-        painter.drawRect(rect)
+        # Draw all four sides of the frame border
+        painter.drawLine(border_rect.topLeft(), border_rect.topRight())  # Top
+        painter.drawLine(border_rect.topLeft(), border_rect.bottomLeft())  # Left
+        painter.drawLine(border_rect.topRight(), border_rect.bottomRight())  # Right
+        painter.drawLine(border_rect.bottomLeft(), border_rect.bottomRight())  # Bottom
 
         painter.end()
