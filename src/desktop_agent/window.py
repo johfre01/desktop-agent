@@ -9,7 +9,9 @@ control panel, and drag/resize functionality.
 from PyQt6.QtWidgets import (
     QWidget, QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QApplication
 )
-from PyQt6.QtCore import Qt, QPoint
+from PyQt6.QtCore import Qt, QPoint, QTimer
+from datetime import datetime
+from pathlib import Path
 from PyQt6.QtGui import QPainter, QPen, QColor
 
 
@@ -123,6 +125,10 @@ class MainWindow(QWidget):
         self._drag_start_geometry = None
         self._resize_edge = None
 
+        # Screenshot capture state
+        self._capture_region = None
+        self._is_capturing = False
+
         self.init_ui()
 
     def init_ui(self):
@@ -165,9 +171,66 @@ class MainWindow(QWidget):
         self.control_panel.chat_input.returnPressed.connect(self.on_chat_submit)
 
     def on_capture_clicked(self):
-        """Handle Capture button click."""
-        print("Capture button clicked!")
-        # Screenshot logic will be implemented in Phase 6
+        """Handle Capture button click - start screenshot capture."""
+        # Calculate the capture region (inside the frame border, excluding panel)
+        geo = self.geometry()
+        panel_height = self.get_panel_height()
+
+        # Border drawn with pen width BORDER_WIDTH, centered on line position
+        # This covers BORDER_WIDTH + 1 pixels from each edge (pen extends half-width each side)
+        # Right/bottom need extra margin due to asymmetric border_rect adjustment + anti-aliasing
+        left_margin = self.BORDER_WIDTH + 1
+        top_margin = self.BORDER_WIDTH + 1
+        right_margin = self.BORDER_WIDTH + 3   # Extra for asymmetry + AA
+        bottom_margin = self.BORDER_WIDTH + 2  # Extra for AA at small sizes
+
+        # Store the region to capture (in screen coordinates)
+        self._capture_region = (
+            geo.x() + left_margin,
+            geo.y() + top_margin,
+            geo.width() - left_margin - right_margin,
+            geo.height() - panel_height - top_margin - bottom_margin
+        )
+
+        # Make interior fully transparent (skip the nearly-invisible fill)
+        self._is_capturing = True
+        self.repaint()
+        QApplication.processEvents()
+
+        # Short delay for compositor to update, then capture
+        QTimer.singleShot(50, self._do_capture)
+
+    def _do_capture(self):
+        """Perform the actual screen capture."""
+        if self._capture_region is None:
+            self._is_capturing = False
+            self.repaint()
+            return
+
+        x, y, width, height = self._capture_region
+
+        # Capture the screen region
+        screen = QApplication.primaryScreen()
+        pixmap = screen.grabWindow(0, x, y, width, height)
+
+        # Restore the nearly-invisible fill for mouse event handling
+        self._is_capturing = False
+        self.repaint()
+
+        # Create save directory
+        save_dir = Path("C:/Projects/Desktop Agent/screenshots")
+        save_dir.mkdir(parents=True, exist_ok=True)
+
+        # Generate filename with timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filepath = save_dir / f"Context_{timestamp}.png"
+
+        # Save the screenshot
+        pixmap.save(str(filepath))
+        print(f"Screenshot saved: {filepath}")
+
+        # Clear capture region
+        self._capture_region = None
 
     def on_chat_submit(self):
         """Handle chat input submission."""
@@ -377,11 +440,12 @@ class MainWindow(QWidget):
 
         # Get panel height to know where frame ends
         panel_height = self.get_panel_height()
-
-        # Fill the frame area (above panel) with nearly-invisible color
-        # to capture mouse events
         frame_rect = self.rect().adjusted(0, 0, 0, -panel_height)
-        painter.fillRect(frame_rect, QColor(0, 0, 0, 1))
+
+        # Fill with nearly-invisible color for mouse event handling
+        # Skip during capture so screen shows through
+        if not self._is_capturing:
+            painter.fillRect(frame_rect, QColor(0, 0, 0, 1))
 
         # Set up the pen for drawing the border
         pen = QPen(self.BORDER_COLOR)

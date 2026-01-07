@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 6: Screenshot Capture | Desktop Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e4e4e4;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .breadcrumb {
+            margin-bottom: 30px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #00d9ff;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        header {
+            margin-bottom: 40px;
+        }
+
+        .phase-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #00ff88, #00d9ff);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #888;
+        }
+
+        .goal-banner {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(0, 255, 136, 0.2));
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .goal-banner h2 {
+            color: #00d9ff;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .goal-banner p {
+            color: #bbb;
+            margin: 0;
+        }
+
+        .content-section {
+            background: rgba(255,255,255,0.03);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            color: #00d9ff;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            color: #00ff88;
+            margin: 25px 0 15px 0;
+            font-weight: 400;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #bbb;
+        }
+
+        code {
+            background: rgba(0, 217, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #00d9ff;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #0a0a15;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e4e4e4;
+            display: block;
+            line-height: 1.6;
+        }
+
+        .keyword { color: #c586c0; }
+        .function { color: #dcdcaa; }
+        .class-name { color: #4ec9b0; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; }
+        .number { color: #b5cea8; }
+
+        ul, ol {
+            margin: 15px 0 15px 25px;
+            color: #bbb;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .concept-card {
+            background: rgba(0, 217, 255, 0.05);
+            border-left: 4px solid #00d9ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .concept-card h4 {
+            color: #00d9ff;
+            margin-bottom: 10px;
+        }
+
+        .warning-box {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .warning-box h4 {
+            color: #ffc107;
+            margin-bottom: 10px;
+        }
+
+        .step-list {
+            list-style: none;
+            margin: 20px 0;
+            padding: 0;
+            counter-reset: step-counter;
+        }
+
+        .step-list li {
+            position: relative;
+            padding: 20px;
+            padding-left: 70px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            counter-increment: step-counter;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .flow-step {
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 10px;
+            padding: 15px 20px;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .flow-arrow {
+            color: #00ff88;
+            font-size: 1.5rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 8px;
+            color: #00d9ff;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(0, 217, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            color: #000;
+            border: none;
+            font-weight: 600;
+        }
+
+        .milestone-banner {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 217, 255, 0.2));
+            border: 2px solid rgba(0, 255, 136, 0.4);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .milestone-banner h3 {
+            color: #00ff88;
+            margin: 0 0 10px 0;
+        }
+
+        .milestone-banner p {
+            margin: 0;
+            color: #bbb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../project-overview.html">Desktop Agent</a> / Phase 6: Screenshot Capture
+        </div>
+
+        <header>
+            <span class="phase-badge">Phase 6 of 6</span>
+            <h1>Screenshot Capture</h1>
+            <p class="subtitle">Make the Capture button actually capture!</p>
+        </header>
+
+        <div class="goal-banner">
+            <h2>Phase Goal</h2>
+            <p>When the user clicks the Capture button, take a screenshot of only the area inside the frame and save it to a file.</p>
+        </div>
+
+        <div class="milestone-banner">
+            <h3>Iteration 1 Finale!</h3>
+            <p>This is the final phase of Iteration 1. After this, you'll have a fully functional screenshot capture tool!</p>
+        </div>
+
+        <div class="content-section">
+            <h2>The Challenge</h2>
+
+            <p>Taking a screenshot sounds simple, but our overlay presents an interesting challenge:</p>
+
+            <div class="warning-box">
+                <h4>The Problem</h4>
+                <p>If we capture the screen while our overlay is visible, the cyan border and control panel will appear in the screenshot! We want to capture what's <em>behind</em> our overlay, not the overlay itself.</p>
+            </div>
+
+            <h3>The Solution: Hide-Capture-Show</h3>
+            <p>The trick is to temporarily hide our window, take the screenshot, then show it again. This happens so fast the user barely notices:</p>
+
+            <div class="flow-diagram">
+                <div class="flow-step">Hide Window</div>
+                <span class="flow-arrow">&rarr;</span>
+                <div class="flow-step">Wait a Moment</div>
+                <span class="flow-arrow">&rarr;</span>
+                <div class="flow-step">Capture Screen</div>
+                <span class="flow-arrow">&rarr;</span>
+                <div class="flow-step">Show Window</div>
+                <span class="flow-arrow">&rarr;</span>
+                <div class="flow-step">Save Image</div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Screen Capture in PyQt6</h2>
+
+            <p>PyQt6 provides built-in screen capture through <code>QScreen</code>:</p>
+
+            <pre><code><span class="comment"># Get the primary screen</span>
+screen = <span class="class-name">QApplication</span>.<span class="function">primaryScreen</span>()
+
+<span class="comment"># Capture a specific region (x, y, width, height)</span>
+pixmap = screen.<span class="function">grabWindow</span>(<span class="number">0</span>, x, y, width, height)
+
+<span class="comment"># Save to file</span>
+pixmap.<span class="function">save</span>(<span class="string">"screenshot.png"</span>)</code></pre>
+
+            <div class="concept-card">
+                <h4>What is a QPixmap?</h4>
+                <p><code>QPixmap</code> is Qt's image class optimized for displaying on screen. It can be saved to common formats (PNG, JPG, BMP) and is the result of screen captures. The first parameter <code>0</code> in <code>grabWindow</code> means "capture the entire desktop" rather than a specific window.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Calculating the Capture Region</h2>
+
+            <p>We need to capture only the area inside our frame border, excluding the border itself and the control panel:</p>
+
+            <pre><code><span class="comment"># Get window position and size</span>
+geo = self.<span class="function">geometry</span>()
+
+<span class="comment"># Calculate the inner capture area</span>
+border = self.BORDER_WIDTH
+panel_height = self.<span class="function">get_panel_height</span>()
+
+capture_x = geo.<span class="function">x</span>() + border
+capture_y = geo.<span class="function">y</span>() + border
+capture_width = geo.<span class="function">width</span>() - (<span class="number">2</span> * border)
+capture_height = geo.<span class="function">height</span>() - (<span class="number">2</span> * border) - panel_height</code></pre>
+
+            <p>This gives us the exact rectangle of content visible through our "window frame".</p>
+        </div>
+
+        <div class="content-section">
+            <h2>The Timing Challenge</h2>
+
+            <p>When we hide our window, we need to give the operating system a moment to actually remove it from the screen before capturing. This is where <code>QTimer.singleShot()</code> comes in:</p>
+
+            <pre><code><span class="keyword">def</span> <span class="function">capture_screenshot</span>(self):
+    <span class="comment"># Hide our window</span>
+    self.<span class="function">hide</span>()
+
+    <span class="comment"># Wait 100ms, then take the screenshot</span>
+    <span class="class-name">QTimer</span>.<span class="function">singleShot</span>(<span class="number">100</span>, self._do_capture)</code></pre>
+
+            <div class="concept-card">
+                <h4>Why QTimer.singleShot()?</h4>
+                <p>We can't use <code>time.sleep()</code> because it would freeze the entire application, preventing the window from actually hiding. <code>QTimer.singleShot()</code> schedules a function to run after a delay while keeping the event loop running, so the hide operation can complete.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Saving the Screenshot</h2>
+
+            <p>We have options for where to save:</p>
+
+            <h3>Option 1: Auto-save to a folder</h3>
+            <pre><code><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+<span class="keyword">from</span> pathlib <span class="keyword">import</span> Path
+
+<span class="comment"># Create screenshots folder in user's Pictures</span>
+save_dir = Path.<span class="function">home</span>() / <span class="string">"Pictures"</span> / <span class="string">"Desktop Agent"</span>
+save_dir.<span class="function">mkdir</span>(parents=<span class="keyword">True</span>, exist_ok=<span class="keyword">True</span>)
+
+<span class="comment"># Generate filename with timestamp</span>
+timestamp = datetime.<span class="function">now</span>().<span class="function">strftime</span>(<span class="string">"%Y%m%d_%H%M%S"</span>)
+filepath = save_dir / <span class="string">f"capture_<span class="keyword">{timestamp}</span>.png"</span></code></pre>
+
+            <h3>Option 2: Ask user with file dialog</h3>
+            <pre><code><span class="keyword">from</span> PyQt6.QtWidgets <span class="keyword">import</span> QFileDialog
+
+filepath, _ = <span class="class-name">QFileDialog</span>.<span class="function">getSaveFileName</span>(
+    self,
+    <span class="string">"Save Screenshot"</span>,
+    <span class="string">"screenshot.png"</span>,
+    <span class="string">"PNG Files (*.png);;JPEG Files (*.jpg)"</span>
+)</code></pre>
+
+            <p>For a quick-capture tool, auto-save is usually better - less friction for the user.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Implementation Steps</h2>
+
+            <ol class="step-list">
+                <li>
+                    <strong>Store window geometry before hiding</strong><br>
+                    <span style="color: #888;">Save the capture region coordinates before the window disappears.</span>
+                </li>
+                <li>
+                    <strong>Hide the window</strong><br>
+                    <span style="color: #888;">Use <code>self.hide()</code> to make our overlay invisible.</span>
+                </li>
+                <li>
+                    <strong>Wait for the hide to complete</strong><br>
+                    <span style="color: #888;">Use <code>QTimer.singleShot()</code> to delay the capture.</span>
+                </li>
+                <li>
+                    <strong>Capture the screen region</strong><br>
+                    <span style="color: #888;">Use <code>QScreen.grabWindow()</code> with saved coordinates.</span>
+                </li>
+                <li>
+                    <strong>Show the window again</strong><br>
+                    <span style="color: #888;">Bring our overlay back with <code>self.show()</code>.</span>
+                </li>
+                <li>
+                    <strong>Save the image</strong><br>
+                    <span style="color: #888;">Write to file with auto-generated filename.</span>
+                </li>
+            </ol>
+        </div>
+
+        <div class="content-section">
+            <h2>New Imports Needed</h2>
+
+            <pre><code><span class="keyword">from</span> PyQt6.QtCore <span class="keyword">import</span> Qt, QPoint, <span class="class-name">QTimer</span>
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+<span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>What You'll Learn</h2>
+
+            <ul>
+                <li><strong>QScreen and grabWindow()</strong> - PyQt's screen capture API</li>
+                <li><strong>QPixmap</strong> - Qt's image class for screen display</li>
+                <li><strong>QTimer.singleShot()</strong> - Scheduling delayed actions without blocking</li>
+                <li><strong>pathlib.Path</strong> - Modern Python path handling</li>
+                <li><strong>datetime formatting</strong> - Creating timestamp-based filenames</li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="phase-05-summary.html" class="nav-btn">
+                &larr; Phase 5 Summary
+            </a>
+            <a href="#" class="nav-btn primary" onclick="alert('Time to implement! Follow along with Claude.'); return false;">
+                Let's Build It &rarr;
+            </a>
+        </div>
+    </div>
+</body>
+</html>
