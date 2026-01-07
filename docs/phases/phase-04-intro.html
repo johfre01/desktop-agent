@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 4: Drag & Resize - Introduction | Desktop Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e4e4e4;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .breadcrumb {
+            margin-bottom: 30px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #00d9ff;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        header {
+            margin-bottom: 40px;
+        }
+
+        .phase-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #888;
+        }
+
+        .objectives-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .objective-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #00d9ff;
+        }
+
+        .objective-card.learning {
+            border-left-color: #00ff88;
+        }
+
+        .objective-card h3 {
+            font-size: 0.9rem;
+            color: #00d9ff;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .objective-card.learning h3 {
+            color: #00ff88;
+        }
+
+        .objective-card p {
+            color: #bbb;
+            font-size: 0.95rem;
+        }
+
+        .content-section {
+            background: rgba(255,255,255,0.03);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            color: #00d9ff;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            color: #00ff88;
+            margin: 25px 0 15px 0;
+            font-weight: 400;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #bbb;
+        }
+
+        code {
+            background: rgba(0, 217, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #00d9ff;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #0a0a15;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e4e4e4;
+            display: block;
+            line-height: 1.6;
+        }
+
+        .keyword { color: #c586c0; }
+        .function { color: #dcdcaa; }
+        .class-name { color: #4ec9b0; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; }
+        .number { color: #b5cea8; }
+
+        ul, ol {
+            margin: 15px 0 15px 25px;
+            color: #bbb;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .info-box {
+            background: rgba(0, 217, 255, 0.1);
+            border-left: 4px solid #00d9ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .info-box.tip {
+            background: rgba(0, 255, 136, 0.1);
+            border-left-color: #00ff88;
+        }
+
+        .info-box.warning {
+            background: rgba(255, 193, 7, 0.1);
+            border-left-color: #ffc107;
+        }
+
+        .info-box strong {
+            color: #fff;
+        }
+
+        .event-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 20px;
+            background: #0a0a15;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .event-box {
+            background: rgba(0, 217, 255, 0.2);
+            border: 1px solid #00d9ff;
+            padding: 12px 18px;
+            border-radius: 8px;
+            color: #00d9ff;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .event-arrow {
+            color: #00ff88;
+            font-size: 1.3rem;
+        }
+
+        .zone-diagram {
+            background: #0a0a15;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .zone-frame {
+            display: inline-block;
+            width: 280px;
+            height: 180px;
+            border: 2px solid #00d9ff;
+            position: relative;
+            background: rgba(0, 217, 255, 0.05);
+        }
+
+        .zone {
+            position: absolute;
+            font-size: 0.7rem;
+            color: #00ff88;
+            background: rgba(0, 255, 136, 0.2);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .zone.top { top: 5px; left: 50%; transform: translateX(-50%); }
+        .zone.bottom { bottom: 5px; left: 50%; transform: translateX(-50%); }
+        .zone.left { left: 5px; top: 50%; transform: translateY(-50%); }
+        .zone.right { right: 5px; top: 50%; transform: translateY(-50%); }
+        .zone.top-left { top: 5px; left: 5px; }
+        .zone.top-right { top: 5px; right: 5px; }
+        .zone.bottom-left { bottom: 5px; left: 5px; }
+        .zone.bottom-right { bottom: 5px; right: 5px; }
+        .zone.center { top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 217, 255, 0.2); color: #00d9ff; }
+
+        .cursor-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .cursor-table th,
+        .cursor-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .cursor-table th {
+            background: rgba(0, 217, 255, 0.1);
+            color: #00d9ff;
+            font-weight: 500;
+        }
+
+        .cursor-table td {
+            color: #bbb;
+        }
+
+        .task-list {
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .task-list h4 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .task {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .task:last-child {
+            border-bottom: none;
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00d9ff;
+            border-radius: 4px;
+            margin-right: 15px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .task-content {
+            color: #bbb;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 8px;
+            color: #00d9ff;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(0, 217, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.next {
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            color: #000;
+            border: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../project-overview.html">Desktop Agent</a> / Phase 4
+        </div>
+
+        <header>
+            <span class="phase-badge">Phase 4 of 10</span>
+            <h1>Drag & Resize Functionality</h1>
+            <p class="subtitle">Making the overlay interactive with mouse events</p>
+        </header>
+
+        <div class="objectives-box">
+            <div class="objective-card">
+                <h3>App Objective</h3>
+                <p>Enable users to drag the frame anywhere on screen and resize it from any edge or corner.</p>
+            </div>
+            <div class="objective-card learning">
+                <h3>Learning Objective</h3>
+                <p>Master mouse event handling, window geometry manipulation, hit testing, and cursor management.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>The Challenge</h2>
+            <p>
+                Since we removed the default window frame in Phase 3, we lost the built-in ability to drag
+                and resize our window. Now we need to implement these features ourselves using mouse events.
+            </p>
+            <p>
+                This involves three main tasks:
+            </p>
+            <ul>
+                <li><strong>Hit Testing:</strong> Determining which part of the window the user clicked</li>
+                <li><strong>Dragging:</strong> Moving the window when the user drags from the center</li>
+                <li><strong>Resizing:</strong> Changing window size when the user drags from edges/corners</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Mouse Events in Qt</h2>
+            <p>
+                Qt provides three main mouse events that we'll override:
+            </p>
+
+            <div class="event-flow">
+                <div class="event-box">mousePressEvent<br><small>Button pressed down</small></div>
+                <span class="event-arrow">→</span>
+                <div class="event-box">mouseMoveEvent<br><small>Mouse moves (while pressed)</small></div>
+                <span class="event-arrow">→</span>
+                <div class="event-box">mouseReleaseEvent<br><small>Button released</small></div>
+            </div>
+
+            <h3>Event Methods</h3>
+            <pre><code><span class="keyword">def</span> <span class="function">mousePressEvent</span>(self, event):
+    <span class="string">"""Called when mouse button is pressed."""</span>
+    <span class="keyword">if</span> event.<span class="function">button</span>() == <span class="class-name">Qt</span>.MouseButton.LeftButton:
+        <span class="comment"># Store starting position</span>
+        self.drag_start = event.<span class="function">globalPosition</span>().<span class="function">toPoint</span>()
+
+<span class="keyword">def</span> <span class="function">mouseMoveEvent</span>(self, event):
+    <span class="string">"""Called when mouse moves (with button pressed)."""</span>
+    <span class="keyword">if</span> event.<span class="function">buttons</span>() & <span class="class-name">Qt</span>.MouseButton.LeftButton:
+        <span class="comment"># Calculate how far the mouse moved</span>
+        delta = event.<span class="function">globalPosition</span>().<span class="function">toPoint</span>() - self.drag_start
+        <span class="comment"># Move the window by that amount</span>
+        self.<span class="function">move</span>(self.<span class="function">pos</span>() + delta)
+        self.drag_start = event.<span class="function">globalPosition</span>().<span class="function">toPoint</span>()
+
+<span class="keyword">def</span> <span class="function">mouseReleaseEvent</span>(self, event):
+    <span class="string">"""Called when mouse button is released."""</span>
+    self.drag_start = <span class="keyword">None</span></code></pre>
+
+            <div class="info-box">
+                <strong>Global vs Local Position:</strong> <code>globalPosition()</code> gives coordinates
+                relative to the entire screen. <code>position()</code> gives coordinates relative to the widget.
+                For dragging windows, we need global coordinates.
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Hit Testing: Where Did They Click?</h2>
+            <p>
+                We need to determine which zone the user clicked in to decide whether to drag or resize
+                (and which direction to resize).
+            </p>
+
+            <div class="zone-diagram">
+                <div class="zone-frame">
+                    <span class="zone top-left">NW</span>
+                    <span class="zone top">N</span>
+                    <span class="zone top-right">NE</span>
+                    <span class="zone left">W</span>
+                    <span class="zone center">DRAG</span>
+                    <span class="zone right">E</span>
+                    <span class="zone bottom-left">SW</span>
+                    <span class="zone bottom">S</span>
+                    <span class="zone bottom-right">SE</span>
+                </div>
+                <p style="color: #666; margin-top: 15px; font-size: 0.9rem;">
+                    9 zones: 4 corners + 4 edges + center (drag area)
+                </p>
+            </div>
+
+            <h3>The Edge Margin</h3>
+            <p>
+                We define a "margin" (e.g., 8 pixels) at the edges. Clicks within this margin trigger resizing;
+                clicks in the center trigger dragging.
+            </p>
+
+            <pre><code>EDGE_MARGIN = <span class="number">8</span>  <span class="comment"># Pixels from edge for resize zones</span>
+
+<span class="keyword">def</span> <span class="function">get_edge_at_position</span>(self, pos):
+    <span class="string">"""Determine which edge/corner the position is in."""</span>
+    x, y = pos.<span class="function">x</span>(), pos.<span class="function">y</span>()
+    width, height = self.<span class="function">width</span>(), self.<span class="function">height</span>()
+
+    left = x < EDGE_MARGIN
+    right = x > width - EDGE_MARGIN
+    top = y < EDGE_MARGIN
+    bottom = y > height - EDGE_MARGIN
+
+    <span class="keyword">if</span> top <span class="keyword">and</span> left: <span class="keyword">return</span> <span class="string">"top-left"</span>
+    <span class="keyword">if</span> top <span class="keyword">and</span> right: <span class="keyword">return</span> <span class="string">"top-right"</span>
+    <span class="comment"># ... etc</span></code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Cursor Feedback</h2>
+            <p>
+                To give users visual feedback about what will happen when they click, we change the cursor
+                based on which zone they're hovering over.
+            </p>
+
+            <table class="cursor-table">
+                <tr>
+                    <th>Zone</th>
+                    <th>Cursor</th>
+                    <th>Qt Constant</th>
+                </tr>
+                <tr>
+                    <td>Center (drag)</td>
+                    <td>Move arrows (✥)</td>
+                    <td><code>Qt.CursorShape.SizeAllCursor</code></td>
+                </tr>
+                <tr>
+                    <td>Left / Right edges</td>
+                    <td>Horizontal arrows (↔)</td>
+                    <td><code>Qt.CursorShape.SizeHorCursor</code></td>
+                </tr>
+                <tr>
+                    <td>Top / Bottom edges</td>
+                    <td>Vertical arrows (↕)</td>
+                    <td><code>Qt.CursorShape.SizeVerCursor</code></td>
+                </tr>
+                <tr>
+                    <td>Top-left / Bottom-right</td>
+                    <td>Diagonal (↘)</td>
+                    <td><code>Qt.CursorShape.SizeFDiagCursor</code></td>
+                </tr>
+                <tr>
+                    <td>Top-right / Bottom-left</td>
+                    <td>Diagonal (↙)</td>
+                    <td><code>Qt.CursorShape.SizeBDiagCursor</code></td>
+                </tr>
+            </table>
+
+            <pre><code><span class="comment"># Change cursor based on position</span>
+self.<span class="function">setCursor</span>(<span class="class-name">Qt</span>.CursorShape.SizeHorCursor)</code></pre>
+
+            <div class="info-box tip">
+                <strong>User Experience:</strong> Changing cursors is crucial for usability. Without visual
+                feedback, users won't know they can resize from the edges.
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Resizing Logic</h2>
+            <p>
+                Resizing is more complex than dragging because we need to adjust both position and size,
+                and different edges affect different properties:
+            </p>
+
+            <ul>
+                <li><strong>Right edge:</strong> Only width changes</li>
+                <li><strong>Bottom edge:</strong> Only height changes</li>
+                <li><strong>Left edge:</strong> X position AND width change</li>
+                <li><strong>Top edge:</strong> Y position AND height change</li>
+            </ul>
+
+            <pre><code><span class="comment"># Resizing from the right edge</span>
+new_width = self.<span class="function">width</span>() + delta.x()
+self.<span class="function">resize</span>(new_width, self.<span class="function">height</span>())
+
+<span class="comment"># Resizing from the left edge (position also changes!)</span>
+new_x = self.<span class="function">x</span>() + delta.x()
+new_width = self.<span class="function">width</span>() - delta.x()
+self.<span class="function">setGeometry</span>(new_x, self.<span class="function">y</span>(), new_width, self.<span class="function">height</span>())</code></pre>
+
+            <div class="info-box warning">
+                <strong>Minimum Size:</strong> Always respect the minimum size when resizing!
+                Check that the new dimensions don't go below <code>minimumWidth()</code> and
+                <code>minimumHeight()</code>.
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Mouse Tracking</h2>
+            <p>
+                By default, <code>mouseMoveEvent</code> is only called when a mouse button is pressed.
+                To update the cursor while hovering (no button pressed), we enable mouse tracking:
+            </p>
+
+            <pre><code><span class="comment"># In __init__ or init_ui</span>
+self.<span class="function">setMouseTracking</span>(<span class="keyword">True</span>)</code></pre>
+
+            <p>
+                With this enabled, <code>mouseMoveEvent</code> fires continuously as the mouse moves,
+                allowing us to update the cursor based on position.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2>The Complete Flow</h2>
+            <ol>
+                <li><strong>Mouse moves</strong> → Update cursor based on zone (with mouse tracking)</li>
+                <li><strong>Mouse pressed</strong> → Store start position and determine action (drag or resize + direction)</li>
+                <li><strong>Mouse moves (button held)</strong> → Execute drag or resize based on stored action</li>
+                <li><strong>Mouse released</strong> → Clear stored state</li>
+            </ol>
+        </div>
+
+        <div class="content-section">
+            <h2>Tasks for This Phase</h2>
+
+            <div class="task-list">
+                <h4>Implementation Tasks</h4>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Enable mouse tracking for cursor updates</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Implement <code>get_edge_at_position()</code> for hit testing</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Override <code>mousePressEvent</code> to start drag/resize</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Override <code>mouseMoveEvent</code> for cursor updates and drag/resize execution</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Override <code>mouseReleaseEvent</code> to end drag/resize</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Implement dragging from center area</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Implement resizing from all 4 edges</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Implement resizing from all 4 corners</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Change cursor based on hover position</div>
+                </div>
+                <div class="task">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">Respect minimum window size during resize</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="phase-03-summary.html" class="nav-btn">
+                &larr; Phase 3 Summary
+            </a>
+            <a href="phase-04-summary.html" class="nav-btn next">
+                Continue to Implementation &rarr;
+            </a>
+        </div>
+    </div>
+</body>
+</html>
